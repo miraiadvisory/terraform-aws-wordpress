@@ -29,11 +29,16 @@ resource "aws_instance" "wordpress_web" {
       "echo '${aws_efs_file_system.wordpress_fs.dns_name}:/  /var/www  nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 0 0' | sudo tee -a /etc/fstab"
     ]
   }
+
   connection {
     type        = "ssh"
     user        = "ubuntu"
     private_key = var.ec2_key
     host        = self.private_ip
+  }
+
+  lifecycle {
+    ignore_changes = [ami]
   }
 
   tags = {
@@ -121,7 +126,7 @@ resource "aws_elb" "wp_lb" {
 }
 
 resource "aws_load_balancer_policy" "wp_lb_cypher" {
-  load_balancer_name = "${aws_elb.wp_lb.name}"
+  load_balancer_name = aws_elb.wp_lb.name
   policy_name        = "SSL-Policy"
   policy_type_name   = "SSLNegotiationPolicyType"
 
@@ -131,12 +136,12 @@ resource "aws_load_balancer_policy" "wp_lb_cypher" {
   }
 
   lifecycle {
-    ignore_changes = ["policy_attribute"]
+    ignore_changes = [policy_attribute]
   }
 }
 
 resource "aws_load_balancer_listener_policy" "wp_lb_policy" {
-  load_balancer_name = "${aws_elb.wp_lb.name}"
+  load_balancer_name = aws_elb.wp_lb.name
   load_balancer_port = 443
 
   policy_names = [
@@ -156,8 +161,8 @@ resource "aws_route53_record" "blog" {
   type    = "A"
 
   alias {
-    name                   = "${aws_elb.wp_lb.dns_name}"
-    zone_id                = "${aws_elb.wp_lb.zone_id}"
+    name                   = aws_elb.wp_lb.dns_name
+    zone_id                = aws_elb.wp_lb.zone_id
     evaluate_target_health = false
   }
 }
