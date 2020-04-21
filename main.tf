@@ -42,6 +42,7 @@ resource "aws_instance" "wordpress_web" {
   }
 
   tags = {
+    Name        = var.instance_name
     Project     = var.projectname
     Environment = var.environment
   }

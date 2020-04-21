@@ -185,13 +185,19 @@ variable "ec2_key" {
 }
 
 variable "environment" {
-  description = ""
+  description = "Tag"
   default     = ""
   type        = string
 }
 
 variable "projectname" {
-  description = ""
+  description = "Tag"
+  default     = ""
+  type        = string
+}
+
+variable "instance_name" {
+  description = "Name Tag for web server instance"
   default     = ""
   type        = string
 }
