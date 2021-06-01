@@ -18,7 +18,7 @@ resource "aws_instance" "wordpress_web" {
   instance_type           = var.instance_type
   key_name                = var.key_name
   subnet_id               = var.subnet_id_1
-  vpc_security_group_ids  = ["${aws_security_group.wordpress_web.id}"]
+  vpc_security_group_ids  = [ aws_security_group.wordpress_web.id ]
   depends_on              = [aws_efs_mount_target.alpha]
 
   provisioner "remote-exec" {
@@ -63,7 +63,7 @@ resource "aws_efs_file_system" "wordpress_fs" {
 resource "aws_efs_mount_target" "alpha" {
   file_system_id  = aws_efs_file_system.wordpress_fs.id
   subnet_id       = var.subnet_id_1
-  security_groups = ["${aws_security_group.wordpress_web.id}"]
+  security_groups = [ aws_security_group.wordpress_web.id ]
 }
 
 ### RDS MySQL ###
@@ -107,8 +107,8 @@ resource "aws_db_subnet_group" "wordpress_db" {
 resource "aws_elb" "wp_lb" {
   name               = "wordpress-lb"
   subnets            = [var.pub_subnet_1,var.pub_subnet_2,var.pub_subnet_3]
-  instances          = ["${aws_instance.wordpress_web.id}"]
-  security_groups    = ["${aws_security_group.elb.id}"]
+  instances          = [ aws_instance.wordpress_web.id ]
+  security_groups    = [ aws_security_group.elb.id ]
 
   listener {
     instance_port     = 80
