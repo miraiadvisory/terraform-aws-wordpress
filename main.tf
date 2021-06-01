@@ -146,7 +146,7 @@ resource "aws_load_balancer_listener_policy" "wp_lb_policy" {
   load_balancer_port = 443
 
   policy_names = [
-    "${aws_load_balancer_policy.wp_lb_cypher.policy_name}",
+    aws_load_balancer_policy.wp_lb_cypher.policy_name,
   ]
 }
 
