@@ -84,7 +84,7 @@ resource "aws_db_instance" "wordpress_db" {
   storage_encrypted           = var.encrypted_db 
   allow_major_version_upgrade = var.allow_major_upgrade
   db_subnet_group_name        = aws_db_subnet_group.wordpress_db.name
-  vpc_security_group_ids      = ["${aws_security_group.wordpress_db.id}"]
+  vpc_security_group_ids      = [ aws_security_group.wordpress_db.id ]
 
   tags = {
     Project     = var.projectname
